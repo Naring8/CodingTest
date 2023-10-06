@@ -1,6 +1,9 @@
 // 시작 시간 (2023-10-05 20:08)
 // 종료 시간 (2023-10-05 21:03) 포기
 
+// 2차 시도 시작(2023-10-05 23:45)
+// 종료(2023-10-06 00:08) - +23분 경과
+
 #include <iostream>
 
 using namespace std;
@@ -27,9 +30,9 @@ void SortAsc(int* arr, int MaxIndex)
         for (int j = i + 1; j < MaxIndex; j++)
             if (arr[Min] > arr[j])
                 Min = j;
-       
+
         Swap(arr, i, Min);
-    }           
+    }
 }
 
 // BOJ - return int
@@ -37,6 +40,8 @@ int main()
 {
     int Height[allNum]; // All(9)
     int RealHeight[Num]; // D(7)
+
+    int Sum = 0;
 
     for (int i = 0; i < allNum; i++)
     {
@@ -52,17 +57,37 @@ int main()
             }
 
             Height[i] = tempHeight;
+            Sum += tempHeight;
         }
-            
+        else
+            return 0;
+
     }   // input
 
-    for (int i = 0; i < allNum; i++)
+    int diff = Sum - 100;
+    int diffIndex = 0;
+
+    for (int i = 0; i < allNum - 1; i++) // Combination 9C7 -> find 100
     {
-        int checkNum = 100 - Height[i];
-
-
+        for (int j = i + 1; j < allNum; j++)
+        {
+            if (Height[i] + Height[j] == diff)
+            {
+                for (int k = 0; k < allNum; k++)
+                {
+                    if (k == i || k == j)
+                        continue;
+                    RealHeight[diffIndex] = Height[k];
+                    diffIndex++;
+                }
+            }
+        }
     }
 
+    SortAsc(RealHeight, Num);
+
+    for (int i = 0; i < Num; i++)
+        cout << RealHeight[i] << endl;
 
     return 0;
 }

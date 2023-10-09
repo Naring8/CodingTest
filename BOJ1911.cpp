@@ -5,77 +5,56 @@
 #include <vector>
 #include <algorithm>
 
-struct PoolIndex
-{
-	PoolIndex(int StartIndex, int EndIndex)
-	{
-		Start = StartIndex;
-		End = EndIndex;
-	}
-
-	int Start;
-	int End;
-};
-
-void SortVector(std::vector<PoolIndex> Vector, int Count)
-{
-	for (int i = 0; i < (Count - 1); i++)
-	{
-		if (Vector[i].Start > Vector[i + 1].Start)
-			std::swap<PoolIndex>(Vector[i], Vector[i + 1]);
-	}
-}
-
 int main()
 {
 	int N; // π∞øıµ¢¿Ã ∞πºˆ
 	int L; // ≥Œ∫˛¡ˆ¿« ±Ê¿Ã
 
 	int MinCountL = 0;
-	int HighestIndex = 0;
 
 	std::cin >> N >> L;
 
-	std::vector<PoolIndex> TempVector;
-	std::vector<bool> PoolVector;
-	{
-		for (int i = 0; i < N; i++)
-		{
-			int StartIndex = 0;
-			int EndIndex = 0;
+	std::vector<std::pair<int, int>> TempVector;
 
-			std::cin >> StartIndex >> EndIndex;
-
-			if (HighestIndex < EndIndex) // ∞°¿Â µ⁄ø° ¿÷¥¬ π∞øıµ¢¿Ã Index
-				HighestIndex = EndIndex;
-
-			PoolIndex Temp(StartIndex, EndIndex);
-
-			for (int j = StartIndex; j < (EndIndex + StartIndex); j++)
-				TempVector.push_back(Temp);
-		}
-		SortVector(TempVector, N);
-	}
-
+	// Sorting
 	for (int i = 0; i < N; i++)
 	{
-		std::cout << TempVector[i].Start << std::endl;
+		int StartIndex = 0;
+		int EndIndex = 0;
+
+		std::cin >> StartIndex >> EndIndex;
+
+		TempVector.push_back({ StartIndex, EndIndex });
 	}
 
-	// æ’ø°º≠∫Œ≈Õ ∞ÀªÁ
-	/*for (int i = 0; i < HighestIndex; i++)
+	std::sort(TempVector.begin(), TempVector.end());
+
+	int curIndex = 0;
+
+	for (int i = 0; i < N; ++i)
 	{
-		if (MaxArray[i])
+		if (curIndex >= TempVector[i].first && curIndex < TempVector[i].second)
 		{
-			std::cout << i << std::endl;
-			MinCountL++;
-			i += (L - 1);	
+			int quotient = (TempVector[i].second - curIndex) / L;	// «— ºº∆Æ ¥Á « ø‰ ≥Œ∫˛¡ˆ ∞πºˆ
+			int remainder = (TempVector[i].second - curIndex) % L;	// øıµ¢¿Ã∏¶ ¿¸∫Œ ±Ú∞Ì ≥≤¿∫ ±Ê
+
+			curIndex += quotient * L;
+			MinCountL += quotient;
+
+			if (remainder != 0)
+			{
+				MinCountL++;
+				curIndex += L;
+			}
 		}
-	}*/
+		else if (curIndex < TempVector[i].first)
+		{
+			curIndex = TempVector[i].first;
+			--i;
+		}
+	}
 
 	std::cout << MinCountL << std::endl;
-
-	// µ⁄ø°º≠∫Œ≈Õ ∞ÀªÁ 
 
 	return 0;
 }
